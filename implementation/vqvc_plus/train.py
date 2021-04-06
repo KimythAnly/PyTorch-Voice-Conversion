@@ -42,7 +42,6 @@ def main(args):
     logger.info('load_config()')
     config = load_config(args.config)
     name = config.pop('name')
-    model_config = config.pop('model')
 
     logger.info('get_dataset()')
     dataset = get_dataset(
@@ -59,12 +58,10 @@ def main(args):
     model = Model(
         dataset=dataset,
         batch_size=args.batch_size,
-        content_params=model_config.pop('content_params'),
-        speaker_params=model_config.pop('speaker_params'),
-        decoder_params=model_config.pop('decoder_params'),
+        model_params=config.pop('model'),
         optimizer_config=config.pop('optimizer'),
         classifier_config=config.pop('classifier', None),
-        loss_params=config.pop('loss_params'),
+        loss_params=config.pop('loss_params')
     )
 
     if args.dry_run:

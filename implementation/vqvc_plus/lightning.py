@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from einops import rearrange, reduce
 
-from .model import ContentEncoder, SpeakerEncoder, Decoder
+from .model import VC_MODEL
 from ..classifier.model import Classifier
 from ..util.lit import BaseModel
 from ..util.torch import get_optim
@@ -18,9 +18,7 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        content_params,
-        speaker_params,
-        decoder_params,
+        model_params,
         optimizer_config,
         classifier_config,
         loss_params,
@@ -29,9 +27,7 @@ class Model(BaseModel):
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.content_encoder = ContentEncoder(**content_params)
-        self.speaker_encoder = SpeakerEncoder(**speaker_params)
-        self.decoder = Decoder(**decoder_params)
+        self.model = VC_MODEL(**model_params)
         # Optimizer
         self.optimizer_config = optimizer_config
         # Vocoder
@@ -57,19 +53,13 @@ class Model(BaseModel):
             % self.trainer.log_every_n_steps == 0
 
         if optimizer_idx == 0:
-            if self.trainer.global_step + 1 >= self.loss_params['annealing_steps']:
-                lambda_kl = self.loss_params['lambda_kl']
-            else:
-                lambda_kl = self.loss_params['lambda_kl'] \
-                    * (self.trainer.global_step+1) \
-                    / self.loss_params['annealing_steps']
+            rec, dec, enc_content, spk, latent_loss, idx = self.model(mel)
 
-            mu, log_sigma, emb, rec = self._model(mel)
             rec_loss = self.criterion_l1(rec, mel)
-            kl_loss = 0.5 * \
-                torch.mean(torch.exp(log_sigma) + mu ** 2 - 1 - log_sigma)
-            loss = self.loss_params['lambda_rec'] * \
-                rec_loss + lambda_kl * kl_loss
+            latent_loss = latent_loss.mean()
+
+            loss = rec_loss + self.loss_params['lambda_latent'] * latent_loss
+
             if should_log:
                 with torch.no_grad():
                     dec = self.forward(mel[[0]], mel[[1]])
@@ -87,7 +77,7 @@ class Model(BaseModel):
                     }
                     log_scalars = {
                         'rec_loss': rec_loss,
-                        'kl_loss': kl_loss,
+                        'latent_loss': latent_loss,
                     }
 
                 self.log_scalars(log_scalars, step=self.trainer.global_step)
@@ -97,12 +87,12 @@ class Model(BaseModel):
                                 step=self.trainer.global_step)
             log_bar_dict = {
                 'rec_loss': round(rec_loss.item(), 3),
-                'kl_loss': round(kl_loss.item(), 3),
+                'latent_loss': round(latent_loss.item(), 3),
                 'total_steps': int(self.trainer.global_step),
             }
 
         if optimizer_idx == 1:
-            c, _ = self.content_encoder(mel)
+            c = self.get_content(mel)
             pred = self.classifier(c.detach())
             loss = self.criterion_ce(pred, sid)
 
@@ -126,7 +116,7 @@ class Model(BaseModel):
         mel = batch['mel']
         # should_log = (self.trainer.global_step % self.trainer.log_every_n_steps == 0)
         # if should_log:
-        c, _ = self.content_encoder(mel)
+        c = self.get_content(mel)
         pred = self.classifier(c.detach())
 
         acc = (pred.argmax(-1) == sid).float().mean()
@@ -147,19 +137,10 @@ class Model(BaseModel):
             log_scalars[k] /= n_item
         self.log_scalars(log_scalars, step=self.trainer.global_step)
 
-    def _model(self, x, x_cond=None):
-        """
-        x: (batch_size, mel_channel, seg_len)
-        """
-        len_x = x.size(-1)
-        if not x_cond:
-            x_cond = torch.cat((x[..., len_x//2:], x[..., :len_x//2]), axis=-1)
+    def get_content(self, x):
+        c, _, _, _ = self.model.encode(x)
+        return c[0]
 
-        emb = self.speaker_encoder(x)
-        mu, log_sigma = self.content_encoder(x)
-        eps = log_sigma.new(*log_sigma.size()).normal_(0, 1)
-        dec = self.decoder(mu + torch.exp(log_sigma / 2) * eps, emb)
-        return mu, log_sigma, emb, dec
 
     def forward(self, source, target):
 
@@ -173,13 +154,12 @@ class Model(BaseModel):
             target = F.pad(target, (0, 8 - original_target_len %
                                     8), mode='reflect')
 
-        x, x_cond = source, target
+        # emb = self.speaker_encoder(x_cond)
+        # mu, log_sigma = self.content_encoder(x)
+        # y = self.decoder(mu, emb)
+        dec = self.model.inference(source, target)
 
-        emb = self.speaker_encoder(x_cond)
-        mu, log_sigma = self.content_encoder(x)
-        y = self.decoder(mu, emb)
-
-        dec = y[..., :original_source_len]
+        dec = dec[..., :original_source_len]
 
         return dec
 
@@ -193,9 +173,7 @@ class Model(BaseModel):
             return None
 
     def configure_optimizers(self):
-        params_vc = list(self.content_encoder.parameters()) \
-            + list(self.speaker_encoder.parameters()) \
-            + list(self.decoder.parameters())
+        params_vc = self.model.parameters()
         optimizer_vc = get_optim(params_vc, self.optimizer_config)
         if self.train_classifier:
             optimizer_cls = get_optim(self.classifier.parameters(), self.optimizer_classifier_config)
