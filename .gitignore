@@ -1,6 +1,8 @@
 __pycache__/
 data/
 wandb/
+.vscode/
+checkpoints/
 lightning_logs/
 *.py[cod]
 *$py.class

@@ -207,12 +207,12 @@ class Postnet(nn.Module):
 
 class Generator(nn.Module):
     """Generator network."""
-    def __init__(self, dim_neck, dim_emb, dim_pre, freq, activation_params):
+    def __init__(self, dim_neck, dim_emb, dim_pre, freq, activation):
         super(Generator, self).__init__()
         
         self.encoder = Encoder(dim_neck, dim_emb, freq)
         self.decoder = Decoder(dim_neck, dim_emb, dim_pre)
-        self.act = Activation(**activation_params)
+        self.act = Activation(**activation)
         self.postnet = Postnet()
 
     def forward(self, x, c_org, c_trg):

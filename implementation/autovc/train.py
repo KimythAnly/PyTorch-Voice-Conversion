@@ -59,7 +59,7 @@ def main(args):
     model = Model(
         dataset=dataset,
         batch_size=args.batch_size,
-        generator_params=model_config.pop('generator_params'),
+        generator_config=model_config.pop('generator'),
         optimizer_config=config.pop('optimizer'),
         classifier_config=config.pop('classifier'),
     )
