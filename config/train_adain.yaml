@@ -8,7 +8,7 @@ n_data_per_speaker: 200
 seg_len: 128
    
 model:
-    speaker_params:
+    speaker:
         c_in: 80
         c_h: 128
         c_out: 128
@@ -21,7 +21,7 @@ model:
         subsample: [1, 2, 1, 2, 1, 2]
         act: 'relu'
         dropout_rate: 0
-    content_params:
+    content:
         c_in: 80
         c_h: 128
         c_out: 128
@@ -33,7 +33,7 @@ model:
         subsample: [1, 2, 1, 2, 1, 2]
         act: 'relu'
         dropout_rate: 0
-    decoder_params:
+    decoder:
         c_in: 128
         c_cond: 128
         c_h: 128
@@ -44,12 +44,12 @@ model:
         act: 'relu'
         sn: False
         dropout_rate: 0
-    classifier_params:
+    classifier:
         c_in: 128
         c_h: 128
         c_out: 80
 
-loss_params:
+loss:
     lambda_rec: 10
     lambda_kl: 1
     annealing_steps: 20000

@@ -59,12 +59,12 @@ def main(args):
     model = Model(
         dataset=dataset,
         batch_size=args.batch_size,
-        content_params=model_config.pop('content_params'),
-        speaker_params=model_config.pop('speaker_params'),
-        decoder_params=model_config.pop('decoder_params'),
+        content_config=model_config.pop('content'),
+        speaker_config=model_config.pop('speaker'),
+        decoder_config=model_config.pop('decoder'),
         optimizer_config=config.pop('optimizer'),
         classifier_config=config.pop('classifier', None),
-        loss_params=config.pop('loss_params'),
+        loss_config=config.pop('loss'),
     )
 
     if args.dry_run:
