@@ -282,7 +282,10 @@ class Activation(nn.Module):
 
     def __init__(self, act, params=None):
         super().__init__()
-        self.act = Activation.dct[act](**params)
+        if params:
+            self.act = Activation.dct[act](**params)
+        else:
+            self.act = Activation.dct[act]
 
     def forward(self, x):
         return self.act(x)

@@ -1,4 +1,7 @@
 __pycache__/
+data/
+wandb/
+lightning_logs/
 *.py[cod]
 *$py.class
 

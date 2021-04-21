@@ -36,7 +36,7 @@ def get_args():
         subparser.add_argument(
             '--batch-size', '-bs', type=int, default=32, help='Training batch size.')
         subparser.add_argument(
-            '--seed', type=int, default=961998, help='Random seed',)
+            '--seed', type=int, default=961998, help='Random seed')
     
     args = parser.parse_args()
     return args

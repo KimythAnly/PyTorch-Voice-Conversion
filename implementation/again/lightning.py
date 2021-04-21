@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-import wandb
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -37,7 +36,13 @@ class Model(BaseModel):
         # Vocoder
         self.vocoder = Vocoder(device=self.device)
         # Classifier
-        self.classifier = Classifier(**classifier_params)
+        if classifier_config:
+            self.train_classifier = True
+            self.classifier = Classifier(**classifier_config.pop('model'))
+            self.optimizer_classifier_config = classifier_config.pop('optimizer')
+            self.criterion_ce = nn.CrossEntropyLoss()
+        else:
+            self.train_classifier = False
         # criterion
         self.criterion_l1 = nn.L1Loss()
         self.criterion_ce = nn.CrossEntropyLoss()

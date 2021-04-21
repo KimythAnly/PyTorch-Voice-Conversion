@@ -19,7 +19,7 @@ class Classifier(nn.Module):
 
     def forward(self, x):
         """
-        x: (batch_size, hidden_dim, seg_len)
+        x: (n, c, t)
         """
         x = rearrange(x, 'n c t -> n t c')
         y = self.in_layer(x)
