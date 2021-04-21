@@ -190,13 +190,13 @@ class CustomHelpFormatter(argparse.ArgumentDefaultsHelpFormatter):
     def _format_args(self, action, default_metavar):
         get_metavar = self._metavar_formatter(action, default_metavar)
         if action.nargs is None:
-            result = '%s' % get_metavar(1)
+            result = '<%s>' % get_metavar(1)
         elif action.nargs == OPTIONAL:
             result = '[%s]' % get_metavar(1)
         elif action.nargs == ZERO_OR_MORE:
             result = '[%s [%s ...]]' % get_metavar(2)
         elif action.nargs == ONE_OR_MORE:
-            result = '%s [%s ...]' % get_metavar(2)
+            result = '<%s> [%s ...]' % get_metavar(2)
         elif action.nargs == REMAINDER:
             result = '...'
         elif action.nargs == PARSER:

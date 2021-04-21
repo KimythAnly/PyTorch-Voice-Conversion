@@ -1,0 +1,33 @@
+name: autovc-v1
+
+vocoder:
+    name: melgan
+
+n_speaker: 80
+n_data_per_speaker: 200
+seg_len: 128
+
+model:
+    generator_params:
+        dim_neck: 8
+        dim_emb: 256
+        dim_pre: 512
+        freq: 16
+        activation_params: 
+            act: none
+
+optimizer:
+    name: Adam
+    lr: 0.0001
+
+classifier:
+    model:
+        c_in: 16
+        c_h: 128
+        c_out: 80
+    optimizer:
+        name: Adam
+        lr: 0.0005
+        betas:
+            - 0.9
+            - 0.999

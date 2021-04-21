@@ -52,7 +52,7 @@ def trim(x, eps=1e-4):
         return x[len(x) - f: end]
 
 
-def pad(x, seg_len, axis=1, mode='wrap'):
+def pad(x, seg_len, axis=1, mode='reflect'):
     padlen = seg_len - x.shape[axis]
     if padlen <= 0:
         return x

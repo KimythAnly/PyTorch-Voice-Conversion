@@ -27,6 +27,11 @@ class BaseModel(pl.LightningModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.dry_run = False
+        self.step = 0
+
+    def on_train_batch_end(self, outputs, batch, batch_idx, dataloader_idx):
+        self.step += 1
+        return super().on_train_batch_end(outputs, batch, batch_idx, dataloader_idx)
 
     def set_dry(self):
         self.dry_run = True
@@ -49,18 +54,18 @@ class BaseModel(pl.LightningModule):
 
     @log_func
     def log_scalars(self, data, step):
-        self.logger.experiment.log(data)
+        self.logger.experiment.log(data, step=step)
 
     @log_func
     def log_mels(self, key, data, step):
         log_data = [
             wandb.Image(viridis(v, flip=True), caption=k) for k, v in data.items()
         ]
-        self.logger.experiment.log({key: log_data})
+        self.logger.experiment.log({key: log_data}, step=step)
 
     @log_func
     def log_audios(self, key, data, step):
         log_data = [
             wandb.Audio(v, caption=k, sample_rate=22050) for k, v in data.items()
         ]
-        self.logger.experiment.log({key: log_data})
+        self.logger.experiment.log({key: log_data}, step=step)
