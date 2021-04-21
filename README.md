@@ -25,5 +25,5 @@ data/feature/vctk
 
 ## Train
 ```bash
-python train.py vqvc_plus --config config/train_vqvc_plus.yaml -t data/feature/vctk -d en_mel --save-steps 10000
+python train.py vqvc_plus --config config/train_vqvc_plus.yaml -t data/feature/vctk -d mel_trim --save-steps 10000
 ```
