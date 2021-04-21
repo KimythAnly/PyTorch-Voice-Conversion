@@ -13,8 +13,7 @@ model:
     channel: 512
     n_embed: 128
 
-
-loss_params:
+loss:
     lambda_latent: 0.1
 
 optimizer:

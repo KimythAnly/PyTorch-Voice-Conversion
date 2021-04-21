@@ -60,18 +60,18 @@ class Activation(nn.Module):
         'elu': nn.ELU,
     }
 
-    def __init__(self, act, params=None):
+    def __init__(self, name, config=None):
         super().__init__()
-        if act == 'none':
-            self.act = lambda x: x
+        if name == 'none':
+            self.layer = lambda x: x
         else:
-            if params:
-                self.act = Activation.dct[act](**params)
+            if config:
+                self.layer = Activation.dct[name](**config)
             else:
-                self.act = Activation.dct[act]()
+                self.layer = Activation.dct[name]()
 
     def forward(self, x):
-        return self.act(x)
+        return self.layer(x)
 
 
 class Encoder(nn.Module):

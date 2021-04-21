@@ -32,6 +32,12 @@ def get_dataset(dataset_name, train_dir, seg_len, n_speaker=None, n_data_per_spe
     )
     return dataset
 
+def preprocess(wav_list, output_dir):
+    for wav in wav_list:
+        print(wav)
+        if os.path.isfile()
+    return
+
 def main(args):
     pl.utilities.seed.seed_everything(seed=args.seed)
 
@@ -39,11 +45,16 @@ def main(args):
     config = load_config(args.config)
     model_config = config.pop('model')
 
+    logger.info('preprocess source')
+    preprocess(args.source, args.out_dir)
+    logger.info('preprocess target')
+    preprocess(args.target, args.out_dir)
+    return
+
     logger.info('get_dataset()')
     dataset = get_dataset(
         dataset_name=args.dataset,
         train_dir=args.train_dir,
-        max_data=args.max_data,
         seg_len=config.pop('seg_len'),
         n_speaker=config.pop('n_speaker', None),
         n_data_per_speaker=config.pop('n_data_per_speaker', None),

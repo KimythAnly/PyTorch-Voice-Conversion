@@ -18,7 +18,7 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        generator_params,
+        generator_config,
         optimizer_config,
         classifier_config,
     ):
@@ -26,7 +26,7 @@ class Model(BaseModel):
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.generator = Generator(**generator_params)
+        self.generator = Generator(**generator_config)
         # Optimizer
         self.optimizer_config = optimizer_config
         # Vocoder

@@ -8,13 +8,13 @@ n_data_per_speaker: 200
 seg_len: 128
 
 model:
-    generator_params:
+    generator:
         dim_neck: 8
         dim_emb: 256
         dim_pre: 512
         freq: 16
-        activation_params: 
-            act: none
+        activation: 
+            name: none
 
 optimizer:
     name: Adam

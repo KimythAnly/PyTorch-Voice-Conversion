@@ -58,10 +58,10 @@ def main(args):
     model = Model(
         dataset=dataset,
         batch_size=args.batch_size,
-        model_params=config.pop('model'),
+        model_config=config.pop('model'),
         optimizer_config=config.pop('optimizer'),
         classifier_config=config.pop('classifier', None),
-        loss_params=config.pop('loss_params')
+        loss_config=config.pop('loss')
     )
 
     if args.dry_run:

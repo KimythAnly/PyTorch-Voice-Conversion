@@ -18,16 +18,16 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        model_params,
+        model_config,
         optimizer_config,
         classifier_config,
-        loss_params,
+        loss_config,
     ):
         super().__init__()
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.model = VC_MODEL(**model_params)
+        self.model = VC_MODEL(**model_config)
         # Optimizer
         self.optimizer_config = optimizer_config
         # Vocoder
@@ -42,7 +42,7 @@ class Model(BaseModel):
             self.criterion_ce = nn.CrossEntropyLoss()
         else:
             self.train_classifier = False
-        self.loss_params = loss_params
+        self.loss_config = loss_config
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         # training_step defined the train loop. It is independent of forward
@@ -58,7 +58,7 @@ class Model(BaseModel):
             rec_loss = self.criterion_l1(rec, mel)
             latent_loss = latent_loss.mean()
 
-            loss = rec_loss + self.loss_params['lambda_latent'] * latent_loss
+            loss = rec_loss + self.loss_config['lambda_latent'] * latent_loss
 
             if should_log:
                 with torch.no_grad():

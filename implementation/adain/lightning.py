@@ -18,20 +18,20 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        content_params,
-        speaker_params,
-        decoder_params,
+        content_config,
+        speaker_config,
+        decoder_config,
         optimizer_config,
         classifier_config,
-        loss_params,
+        loss_config,
     ):
         super().__init__()
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.content_encoder = ContentEncoder(**content_params)
-        self.speaker_encoder = SpeakerEncoder(**speaker_params)
-        self.decoder = Decoder(**decoder_params)
+        self.content_encoder = ContentEncoder(**content_config)
+        self.speaker_encoder = SpeakerEncoder(**speaker_config)
+        self.decoder = Decoder(**decoder_config)
         # Optimizer
         self.optimizer_config = optimizer_config
         # Vocoder
@@ -46,7 +46,7 @@ class Model(BaseModel):
             self.criterion_ce = nn.CrossEntropyLoss()
         else:
             self.train_classifier = False
-        self.loss_params = loss_params
+        self.loss_config = loss_config
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         # training_step defined the train loop. It is independent of forward
@@ -57,18 +57,18 @@ class Model(BaseModel):
             % self.trainer.log_every_n_steps == 0
 
         if optimizer_idx == 0:
-            if self.trainer.global_step + 1 >= self.loss_params['annealing_steps']:
-                lambda_kl = self.loss_params['lambda_kl']
+            if self.trainer.global_step + 1 >= self.loss_config['annealing_steps']:
+                lambda_kl = self.loss_config['lambda_kl']
             else:
-                lambda_kl = self.loss_params['lambda_kl'] \
+                lambda_kl = self.loss_config['lambda_kl'] \
                     * (self.trainer.global_step+1) \
-                    / self.loss_params['annealing_steps']
+                    / self.loss_config['annealing_steps']
 
             mu, log_sigma, emb, rec = self._model(mel)
             rec_loss = self.criterion_l1(rec, mel)
             kl_loss = 0.5 * \
                 torch.mean(torch.exp(log_sigma) + mu ** 2 - 1 - log_sigma)
-            loss = self.loss_params['lambda_rec'] * \
+            loss = self.loss_config['lambda_rec'] * \
                 rec_loss + lambda_kl * kl_loss
             if should_log:
                 with torch.no_grad():
