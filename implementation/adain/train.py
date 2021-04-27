@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def main(
     config,
     train_dir,
-    dataset,
+    dataset='mel_trim',
     ckpt_dir='checkpoints',
     batch_size=32,
     max_data=None,
@@ -27,6 +27,9 @@ def main(
     seed=961998,
     dry_run=False,
 ):
+    """
+    AdaIN-VC: https://arxiv.org/abs/1904.05742q
+    """
     print(config)
     pl.utilities.seed.seed_everything(seed=seed)
 
