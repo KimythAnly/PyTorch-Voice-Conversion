@@ -60,13 +60,13 @@ class Activation(nn.Module):
         'elu': nn.ELU,
     }
 
-    def __init__(self, name, config=None):
+    def __init__(self, name, **kwargs):
         super().__init__()
         if name == 'none':
             self.layer = lambda x: x
         else:
-            if config:
-                self.layer = Activation.dct[name](**config)
+            if kwargs:
+                self.layer = Activation.dct[name](**kwargs)
             else:
                 self.layer = Activation.dct[name]()
 

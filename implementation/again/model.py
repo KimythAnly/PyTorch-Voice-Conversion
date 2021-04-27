@@ -275,17 +275,21 @@ class VariantSigmoid(nn.Module):
 
 class Activation(nn.Module):
     dct = {
-        'none': lambda x: x,
         'sigmoid': VariantSigmoid,
-        'tanh': nn.Tanh
+        'tanh': nn.Tanh,
+        'relu': nn.ReLU,
+        'elu': nn.ELU,
     }
 
-    def __init__(self, act, params=None):
+    def __init__(self, name, **kwargs):
         super().__init__()
-        if params:
-            self.act = Activation.dct[act](**params)
+        if name == 'none':
+            self.layer = lambda x: x
         else:
-            self.act = Activation.dct[act]
+            if kwargs:
+                self.layer = Activation.dct[name](**kwargs)
+            else:
+                self.layer = Activation.dct[name]()
 
     def forward(self, x):
-        return self.act(x)
+        return self.layer(x)

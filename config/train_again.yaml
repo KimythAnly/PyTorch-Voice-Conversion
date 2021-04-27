@@ -1,0 +1,44 @@
+name: again-sigmoid-vctk-v1
+
+vocoder:
+    name: melgan
+
+n_speaker: 80
+n_data_per_speaker: 200
+seg_len: 128
+
+model:
+    encoder:
+        c_in: 80
+        c_h: 256
+        c_out: 4
+        n_conv_blocks: 6
+        subsample: [1, 1, 1, 1, 1, 1]
+    decoder:
+        c_in: 4
+        c_h: 256
+        c_out: 80
+        n_conv_blocks: 6
+        upsample: [1, 1, 1, 1, 1, 1]
+    activation: 
+        name: sigmoid
+        alpha: 0.05
+
+optimizer:
+    name: Adam
+    lr: 0.0005
+    betas:
+        - 0.9
+        - 0.999
+
+classifier:
+    model:
+        c_in: 4
+        c_h: 128
+        c_out: 80
+    optimizer:
+        name: Adam
+        lr: 0.0005
+        betas:
+            - 0.9
+            - 0.999

@@ -18,19 +18,19 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        encoder_params,
-        decoder_params,
-        activation_params,
+        encoder_config,
+        decoder_config,
+        activation_config,
         optimizer_config,
-        classifier_params,
+        classifier_config,
     ):
         super().__init__()
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.encoder = Encoder(**encoder_params)
-        self.decoder = Decoder(**decoder_params)
-        self.act = Activation(**activation_params)
+        self.encoder = Encoder(**encoder_config)
+        self.decoder = Decoder(**decoder_config)
+        self.act = Activation(**activation_config)
         # Optimizer
         self.optimizer_config = optimizer_config
         # Vocoder
@@ -51,7 +51,6 @@ class Model(BaseModel):
         # training_step defined the train loop. It is independent of forward
         sid = batch['sid']
         mel = batch['mel']
-        pos = batch['pos']
 
         should_log = (self.trainer.global_step +
                       1) % self.trainer.log_every_n_steps == 0
@@ -188,11 +187,12 @@ class Model(BaseModel):
     def configure_optimizers(self):
         params_vc = list(self.encoder.parameters()) + \
             list(self.decoder.parameters())
-        optimizer_vc = get_optim(params=params_vc, **self.optimizer_config)
-        optimizer_cls = get_optim(
-            params=self.classifier.parameters(), **self.optimizer_config)
-        return [optimizer_vc, optimizer_cls], []
-
+        optimizer_vc = get_optim(params_vc, self.optimizer_config)
+        if self.train_classifier:
+            optimizer_cls = get_optim(self.classifier.parameters(), self.optimizer_classifier_config)
+            return [optimizer_vc, optimizer_cls], []
+        else:
+            return optimizer_vc
     def get_progress_bar_dict(self):
         # don't show the version number
         items = super().get_progress_bar_dict()
