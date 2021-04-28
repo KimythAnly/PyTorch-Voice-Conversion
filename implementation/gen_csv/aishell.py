@@ -11,6 +11,9 @@ def main(
     input_dir: str,
     output_csv: str,
 ):
+    """
+    Generate csv file for AISHELL-3 preprocessing.
+    """
     results = []
     speaker_dirs = glob(os.path.join(input_dir, 'wav', '*'))
     for speaker_dir in speaker_dirs:

@@ -11,6 +11,9 @@ def main(
     input_dir: str,
     output_csv: str,
 ):
+    """
+    Generate csv file for VCTK preprocessing.
+    """
     results = []
     speaker_dirs = glob(os.path.join(input_dir, 'wav48', '*'))
     for speaker_dir in speaker_dirs:
@@ -21,7 +24,7 @@ def main(
             idx = f'{speaker}_{basename}'
             results.append(f'{idx}\t{speaker}\t{wav}')
 
-    with open(output_csv), 'w') as f:
+    with open(output_csv, 'w') as f:
         f.write('idx\tspeaker\tpath\n')
         for line in results:
             f.write(line+'\n')
