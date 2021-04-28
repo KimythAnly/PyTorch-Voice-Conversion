@@ -13,9 +13,9 @@ from ..util.transform import segment, resample, random_scale, normalize_f0
 logger = logging.getLogger(__name__)
 
 
-def get_dataset(train_dir, seg_len, n_speaker=None, n_data_per_speaker=None, max_data=None):
+def get_dataset(root_dir, seg_len, n_speaker=None, n_data_per_speaker=None, max_data=None):
     split, speaker2id = split_data(
-        Data, train_dir, seg_len, n_speaker, n_data_per_speaker, max_data, default_feature='mel_trim')
+        Data, root_dir, seg_len, n_speaker, n_data_per_speaker, max_data, default_feature='mel_trim')
     dataset = {
         'train': Dataset(split['train'], seg_len=seg_len, speaker2id=speaker2id),
         'val': Dataset(split['val'], seg_len=seg_len, speaker2id=speaker2id),

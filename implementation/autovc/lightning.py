@@ -18,24 +18,24 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        generator_config,
-        optimizer_config,
-        classifier_config,
+        generator,
+        optimizer,
+        classifier,
     ):
         super().__init__()
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.generator = Generator(**generator_config)
+        self.generator = Generator(**generator)
         # Optimizer
-        self.optimizer_config = optimizer_config
+        self.optimizer_config = optimizer
         # Vocoder
         self.vocoder = Vocoder(device=self.device)
         # Classifier
-        if classifier_config:
+        if classifier:
             self.train_classifier = True
-            self.classifier = Classifier(**classifier_config.pop('model'))
-            self.optimizer_classifier_config = classifier_config.pop('optimizer')
+            self.classifier = Classifier(**classifier.pop('model'))
+            self.optimizer_classifier_config = classifier.pop('optimizer')
             self.criterion_ce = nn.CrossEntropyLoss()
         else:
             self.train_classifier = False

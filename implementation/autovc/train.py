@@ -14,19 +14,7 @@ from ..util.config import load_config
 logger = logging.getLogger(__name__)
 
 
-def main(
-    config,
-    train_dir,
-    dataset='autovc_trim',
-    ckpt_dir='checkpoints',
-    batch_size=32,
-    max_data=None,
-    max_steps=100000,
-    save_steps=10000,
-    log_steps=500,
-    seed=961998,
-    dry_run=False,
-):
+def main(config, seed=961998, dry_run=False):
     """
     AutoVC: https://arxiv.org/abs/1905.05879
     """
@@ -36,25 +24,19 @@ def main(
     config = load_config(config)
     name = config.pop('name')
     model_config = config.pop('model')
+    dataset_config = config.pop('dataset')
+    ckpt_dir = config.pop('ckpt_dir', 'checkpoints')
+    trainer_config = config.pop('trainer')
+    save_every_n_train_steps = trainer_config.pop('save_every_n_train_steps')
 
     logger.info('get_dataset()')
-    dataset = get_dataset(
-        dataset_name=dataset,
-        train_dir=train_dir,
-        seg_len=config.pop('seg_len'),
-        max_data=max_data,
-        n_speaker=config.pop('n_speaker', None),
-        n_data_per_speaker=config.pop('n_data_per_speaker', None),
-    )
+    dataset = get_dataset(**dataset_config)
 
     bar_callback = LitProgressBar()
 
     model = Model(
         dataset=dataset,
-        batch_size=batch_size,
-        generator_config=model_config.pop('generator'),
-        optimizer_config=config.pop('optimizer'),
-        classifier_config=config.pop('classifier'),
+        **model_config,
     )
 
     if dry_run:
@@ -66,15 +48,13 @@ def main(
     checkpoint_callback = ModelCheckpoint(
         dirpath=os.path.join(ckpt_dir, name),
         filename=name + '-{step}',
-        every_n_train_steps=save_steps,
+        every_n_train_steps=save_every_n_train_steps,
     )
 
     trainer = pl.Trainer(
-        gpus=1,
-        max_steps=max_steps,
         callbacks=[bar_callback, checkpoint_callback],
         logger=lit_logger,
-        log_every_n_steps=log_steps,
+        **trainer_config,   
     )
 
     trainer.fit(model)

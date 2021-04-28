@@ -1,4 +1,4 @@
-name: 'adain'
+name: adain
 
 vocoder:
     name: melgan
