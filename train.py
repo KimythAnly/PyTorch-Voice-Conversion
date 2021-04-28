@@ -4,6 +4,7 @@ import logging
 import fire
 
 from implementation import get_valid_modules
+from implementation.util.config import load_config
 
 logging.basicConfig(level=logging.INFO,
                     format='[%(levelname)s] %(asctime)-s %(name)s - %(message)s')

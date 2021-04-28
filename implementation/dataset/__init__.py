@@ -19,16 +19,16 @@ def _get_valid_datasets():
     return valid_datasets
 
 
-def get_dataset(dataset_name, train_dir, seg_len, n_speaker=None, n_data_per_speaker=None, max_data=None):
+def get_dataset(name, root_dir, seg_len, n_speaker=None, n_data_per_speaker=None, max_data=None):
     valid_datasets = _get_valid_datasets()
-    if dataset_name not in valid_datasets:
-        logger.error('Invalid dataset "%s"!', dataset_name)
+    if name not in valid_datasets:
+        logger.error('Invalid dataset "%s"!', name)
         logger.info('Please use a valid dataset: %s.', valid_datasets)
         exit(1)
     dataset_module = importlib.import_module(
-        f'.dataset.{dataset_name}', 'implementation')
+        f'.{name}', __package__)
     dataset = dataset_module.get_dataset(
-        train_dir=train_dir,
+        root_dir=root_dir,
         seg_len=seg_len,
         n_speaker=n_speaker,
         n_data_per_speaker=n_data_per_speaker,

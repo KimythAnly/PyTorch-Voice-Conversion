@@ -18,35 +18,35 @@ class Model(BaseModel):
         self,
         dataset,
         batch_size,
-        content_config,
-        speaker_config,
-        decoder_config,
-        optimizer_config,
-        classifier_config,
-        loss_config,
+        content,
+        speaker,
+        decoder,
+        optimizer,
+        classifier,
+        loss,
     ):
         super().__init__()
         self.dataset = dataset
         self.batch_size = batch_size
         # Model
-        self.content_encoder = ContentEncoder(**content_config)
-        self.speaker_encoder = SpeakerEncoder(**speaker_config)
-        self.decoder = Decoder(**decoder_config)
+        self.content_encoder = ContentEncoder(**content)
+        self.speaker_encoder = SpeakerEncoder(**speaker)
+        self.decoder = Decoder(**decoder)
         # Optimizer
-        self.optimizer_config = optimizer_config
+        self.optimizer_config = optimizer
         # Vocoder
         self.vocoder = Vocoder(device=self.device)
         # criterion
         self.criterion_l1 = nn.L1Loss()
         # Classifier
-        if classifier_config:
+        if classifier:
             self.train_classifier = True
-            self.classifier = Classifier(**classifier_config.pop('model'))
-            self.optimizer_classifier_config = classifier_config.pop('optimizer')
+            self.classifier = Classifier(**classifier.pop('model'))
+            self.optimizer_classifier_config = classifier.pop('optimizer')
             self.criterion_ce = nn.CrossEntropyLoss()
         else:
             self.train_classifier = False
-        self.loss_config = loss_config
+        self.loss_config = loss
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         # training_step defined the train loop. It is independent of forward
