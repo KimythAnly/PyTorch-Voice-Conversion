@@ -5,7 +5,7 @@ from glob import glob
 INVALID_MODULES = {
     'classifier',
     'dataset', 
-    'gencsv'
+    'gencsv',
     'preprocess', 
     'util', 
     'vocoder',
