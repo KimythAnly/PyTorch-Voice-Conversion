@@ -22,7 +22,6 @@ def main(config, seed=961998, dry_run=False):
 
     logger.info('load_config()')
     config = load_config(config)
-    
     name = config.pop('name')
     model_config = config.pop('model')
     dataset_config = config.pop('dataset')
@@ -55,7 +54,7 @@ def main(config, seed=961998, dry_run=False):
     trainer = pl.Trainer(
         callbacks=[bar_callback, checkpoint_callback],
         logger=lit_logger,
-        **trainer_config,   
+        **trainer_config,
     )
 
     trainer.fit(model)
