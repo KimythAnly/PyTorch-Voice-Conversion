@@ -1,4 +1,4 @@
-name: autovc
+name: autovc-16
 
 vocoder:
     name: melgan
