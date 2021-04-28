@@ -2,7 +2,14 @@ import os
 import importlib
 from glob import glob
 
-INVALID_MODULES = {'dataset', 'preprocess', 'util', 'vocoder', 'classifier'}
+INVALID_MODULES = {
+    'classifier',
+    'dataset', 
+    'gencsv'
+    'preprocess', 
+    'util', 
+    'vocoder',
+}
 
 
 def get_valid_modules():
