@@ -1,12 +1,12 @@
 import os
 import logging
 from functools import partial
+from multiprocessing.pool import ThreadPool
 
 import numpy as np
 import pandas
 from qqdm import qqdm
-from functools import partial
-from multiprocessing.pool import ThreadPool
+
 from ..vocoder import melgan
 
 

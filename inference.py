@@ -4,7 +4,6 @@ import argparse
 from re import T
 import tempfile
 import shutil
-import subprocess
 from glob import glob
 from typing import Union
 from pathlib import Path

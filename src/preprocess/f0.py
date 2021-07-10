@@ -1,14 +1,13 @@
 import os
 import logging
+from functools import partial
+from multiprocessing.pool import ThreadPool
 
 import numpy as np
 import pandas
 import librosa
 import pyworld as pw
-from glob import glob
 from qqdm import qqdm
-from functools import partial
-from multiprocessing.pool import ThreadPool
 
 
 logging.basicConfig(level=logging.INFO,

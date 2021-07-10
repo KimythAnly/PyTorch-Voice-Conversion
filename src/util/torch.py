@@ -1,5 +1,3 @@
-import importlib
-
 from torch import optim
 
 def get_optim(params, optimizer_config):
