@@ -7,4 +7,5 @@ lightning_logs/
 *.py[cod]
 *$py.class
 exp/
+deprecated/
 
