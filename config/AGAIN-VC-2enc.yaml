@@ -1,4 +1,4 @@
-name: again
+name: AGAIN-VC-2enc
 
 seed: 123456
 
@@ -25,28 +25,33 @@ trainer:
     ckpt_dir: /home/anly/Documents/checkpoints/
 
 model:
-    name: AGAIN-VC
+    name: AGAIN-VC-2enc
     batch_size: 32
     encoder:
         c_in: 80
         c_h: 256
-        c_out: 4
+        c_out: 3
+        n_conv_blocks: 6
+        subsample: [1, 1, 1, 1, 1, 1]
+    speaker:
+        c_in: 80
+        c_h: 256
+        c_out: 3
         n_conv_blocks: 6
         subsample: [1, 1, 1, 1, 1, 1]
     decoder:
-        c_in: 4
+        c_in: 3
         c_h: 256
         c_out: 80
         n_conv_blocks: 6
         upsample: [1, 1, 1, 1, 1, 1]
 
     activation: 
-        name: sigmoid
-        alpha: 0.05
+        name: none
 
     classifier:
         model:
-            c_in: 4
+            c_in: 3
             c_h: 128
             c_out: 80
         optimizer:

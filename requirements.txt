@@ -1,0 +1,15 @@
+einops
+librosa
+matplotlib
+numpy
+opencv-python
+pandas
+pytorch-lightning
+pyworld
+pyyaml
+qqdm
+resemblyzer
+scipy
+soundfile
+torch
+wandb
