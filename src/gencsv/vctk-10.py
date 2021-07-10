@@ -14,6 +14,7 @@ def main(
     """
     Generate csv file for VCTK-10 preprocessing.
     """
+    input_dir = os.path.realpath(input_dir)
     results = []
     speaker_dirs = glob(os.path.join(input_dir, 'train', '*'))
     for speaker_dir in speaker_dirs:
