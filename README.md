@@ -24,6 +24,12 @@ data/feature/vctk
 ```
 
 ## Train
+Edit the config file and then run the script
 ```bash
 python train.py --config config/AGAIN-VC.yaml
+```
+
+## Inference
+```bash
+python inference.py --config config/AGAIN-VC.yaml -s <source_wav> -t <target_wav> -o <output_wav_or_dir>
 ```
