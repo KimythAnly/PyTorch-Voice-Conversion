@@ -1,5 +1,13 @@
 # PyTorch-Voice-Conversion
-Deep models for Voice Conversion.
+Implementations of Voice Conversion models.
+
+| Method | Paper | Source Code | State |
+| -- | -- | -- | -- |
+| AdaIN-VC | [Chou et al.](https://arxiv.org/abs/1904.05742) | [GitHub](https://github.com/jjery2243542/adaptive_voice_conversion) |  |
+| AGAIN-VC | [Chen et al.](https://arxiv.org/abs/2011.00316) | [GitHub](https://github.com/kimythanly/again-vc) | done |
+| AutoVC | [Qian et al.](https://arxiv.org/abs/1905.05879) | [GitHub](https://github.com/auspicious3000/autovc) |  |
+| VQVC+ | [Wu et al.](https://arxiv.org/abs/2006.04154) | [GitHub](https://github.com/ericwudayi/SkipVQVC) |  |
+
 
 ## Preprocess
 
