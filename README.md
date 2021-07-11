@@ -1,7 +1,7 @@
 # PyTorch-Voice-Conversion
 Implementations of Voice Conversion models.
 
-| Method | Paper | Source Code | State |
+| Method | Paper | Official Code | State |
 | -- | -- | -- | -- |
 | AdaIN-VC | [Chou et al.](https://arxiv.org/abs/1904.05742) | [GitHub](https://github.com/jjery2243542/adaptive_voice_conversion) |  |
 | AGAIN-VC | [Chen et al.](https://arxiv.org/abs/2011.00316) | [GitHub](https://github.com/kimythanly/again-vc) | done |
